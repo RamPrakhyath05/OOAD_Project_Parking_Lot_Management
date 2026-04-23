@@ -41,4 +41,34 @@ public class ParkingController {
         }
     }
 
+    // POST /api/parking/exit
+    // Body: { "numberPlate": "KA01AB1234" }
+    @PostMapping("/exit")
+    public ResponseEntity<?> vehicleExit(@RequestBody Map<String, String> request) {
+        try {
+            String numberPlate = request.get("numberPlate");
+            TicketResponse ticket = parkingService.exitVehicle(numberPlate);
+            return ResponseEntity.ok(ticket);
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(StatusResponse.error("Something went wrong: " + e.getMessage()));
+        }
+    }
 
+    // GET /api/parking/active
+    @GetMapping("/active")
+    public ResponseEntity<List<TicketResponse>> getActiveTickets() {
+        return ResponseEntity.ok(parkingService.getActiveTickets());
+    }
+
+    // GET /api/parking/ticket/{id}
+    @GetMapping("/ticket/{id}")
+    public ResponseEntity<?> getTicketById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(parkingService.getTicketById(id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
+        }
+    }
+}
