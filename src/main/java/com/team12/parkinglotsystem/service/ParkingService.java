@@ -1,8 +1,12 @@
-ParkingService.java:
-
 package com.team12.parkinglotsystem.service;
 
-import com.team12.parkinglotsystem.dto.StatusResponse;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.team12.parkinglotsystem.dto.TicketResponse;
 import com.team12.parkinglotsystem.factory.SlotStrategyFactory;
 import com.team12.parkinglotsystem.model.ParkingSlot;
@@ -12,12 +16,6 @@ import com.team12.parkinglotsystem.repository.ParkingSlotRepository;
 import com.team12.parkinglotsystem.repository.TicketRepository;
 import com.team12.parkinglotsystem.repository.VehicleRepository;
 import com.team12.parkinglotsystem.strategy.SlotAllocationStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ParkingService {
