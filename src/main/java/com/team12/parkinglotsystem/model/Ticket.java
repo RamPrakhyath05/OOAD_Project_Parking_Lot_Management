@@ -1,14 +1,10 @@
 package com.team12.parkinglotsystem.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tickets")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Ticket {
 
     @Id
@@ -28,6 +24,7 @@ public class Ticket {
 
     private LocalDateTime exitTime;
 
+    @Column
     private Double fee;
 
     @Enumerated(EnumType.STRING)
@@ -35,15 +32,89 @@ public class Ticket {
     private TicketStatus status;
 
     public enum TicketStatus {
-        ACTIVE,   // vehicle is currently parked
-        CLOSED    // vehicle has exited and fee is paid
+        ACTIVE,
+        CLOSED
     }
 
-    // Convenience constructor for when a vehicle enters
+    // Constructors
+    public Ticket() {
+    }
+
+    public Ticket(Long id, ParkingSlot slot, Vehicle vehicle,
+            LocalDateTime entryTime, LocalDateTime exitTime,
+            Double fee, TicketStatus status) {
+        this.id = id;
+        this.slot = slot;
+        this.vehicle = vehicle;
+        this.entryTime = entryTime;
+        this.exitTime = exitTime;
+        this.fee = fee;
+        this.status = status;
+    }
+
+    // Convenience constructor
     public Ticket(ParkingSlot slot, Vehicle vehicle) {
         this.slot = slot;
         this.vehicle = vehicle;
         this.entryTime = LocalDateTime.now();
         this.status = TicketStatus.ACTIVE;
+    }
+
+    // Getters & Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ParkingSlot getSlot() {
+        return slot;
+    }
+
+    public void setSlot(ParkingSlot slot) {
+        this.slot = slot;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public LocalDateTime getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(LocalDateTime entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public LocalDateTime getExitTime() {
+        return exitTime;
+    }
+
+    public void setExitTime(LocalDateTime exitTime) {
+        this.exitTime = exitTime;
+    }
+
+    public Double getFee() {
+        return fee;
+    }
+
+    public void setFee(Double fee) {
+        this.fee = fee;
+    }
+
+    public TicketStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TicketStatus status) {
+        this.status = status;
     }
 }

@@ -23,7 +23,8 @@ public class ParkingController {
     }
 
     // POST /api/parking/entry
-    // Body: { "numberPlate": "KA01AB1234", "ownerName": "John", "vehicleType": "CAR", "strategy": "nearestSlot" }
+    // Body: { "numberPlate": "KA01AB1234", "ownerName": "John", "vehicleType":
+    // "CAR", "strategy": "nearestSlot" }
     @PostMapping("/entry")
     public ResponseEntity<?> vehicleEntry(@RequestBody Map<String, String> request) {
         try {
@@ -37,7 +38,8 @@ public class ParkingController {
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(StatusResponse.error("Something went wrong: " + e.getMessage()));
+            return ResponseEntity.internalServerError()
+                    .body(StatusResponse.error("Something went wrong: " + e.getMessage()));
         }
     }
 
@@ -52,7 +54,8 @@ public class ParkingController {
         } catch (IllegalStateException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(StatusResponse.error("Something went wrong: " + e.getMessage()));
+            return ResponseEntity.internalServerError()
+                    .body(StatusResponse.error("Something went wrong: " + e.getMessage()));
         }
     }
 
@@ -67,6 +70,16 @@ public class ParkingController {
     public ResponseEntity<?> getTicketById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(parkingService.getTicketById(id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchVehicle(@RequestParam String vehicleNumber) {
+        try {
+            TicketResponse ticket = parkingService.findActiveTicketByVehicleNumber(vehicleNumber);
+            return ResponseEntity.ok(ticket);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
         }

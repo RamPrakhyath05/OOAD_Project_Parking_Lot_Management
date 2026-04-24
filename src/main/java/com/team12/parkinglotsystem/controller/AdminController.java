@@ -3,17 +3,20 @@ package com.team12.parkinglotsystem.controller;
 import com.team12.parkinglotsystem.dto.StatusResponse;
 import com.team12.parkinglotsystem.model.ParkingSlot;
 import com.team12.parkinglotsystem.repository.ParkingSlotRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
-@RequiredArgsConstructor
 public class AdminController {
 
     private final ParkingSlotRepository slotRepository;
+
+    // Explicit constructor (no Lombok)
+    public AdminController(ParkingSlotRepository slotRepository) {
+        this.slotRepository = slotRepository;
+    }
 
     // Add slot
     @PostMapping("/slot")
