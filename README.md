@@ -1,4 +1,4 @@
-# 🚀 Parking Lot Management System (ParkQ)
+# Parking Lot Management System (ParkQ)
 
 A full-stack **Parking Lot Management System** built using **Spring Boot (Java)** and **React**, designed using **Object-Oriented Analysis & Design principles**, MVC architecture, and multiple design patterns.
 
@@ -196,7 +196,7 @@ Relationships:
 | ------ | ---------------------- | ------------- |
 | POST   | `/api/admin/slot`      | Add slot      |
 | GET    | `/api/admin/slots`     | Get all slots |
-| DELETE | `/api/admin/slot/{id}` | Delete slot   |
+| DELETE | `/api/admin/slot/{slotNumber}` | Delete slot   |
 
 ---
 
@@ -235,6 +235,16 @@ npm run dev
 ```bash
 ./run.sh
 ```
+
+---
+
+## 🔄 System Workflow
+
+1. Vehicle enters → system checks if already parked  
+2. Available slot is selected using allocation strategy  
+3. Ticket is generated and slot is marked occupied  
+4. On exit → system calculates duration and fee  
+5. Slot is freed and ticket is closed
 
 ---
 
