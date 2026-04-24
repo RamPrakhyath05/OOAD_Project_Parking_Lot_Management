@@ -227,15 +227,6 @@ cd frontend
 npm install
 npm run dev
 ```
-
----
-
-### 🔹 Run Both (optional script)
-
-```bash
-./run.sh
-```
-
 ---
 
 ## 🔄 System Workflow
