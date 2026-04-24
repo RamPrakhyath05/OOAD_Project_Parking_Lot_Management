@@ -2,9 +2,8 @@ package com.team12.parkinglotsystem.controller;
 
 import com.team12.parkinglotsystem.dto.StatusResponse;
 import com.team12.parkinglotsystem.dto.TicketResponse;
+import com.team12.parkinglotsystem.facade.ParkingFacade;
 import com.team12.parkinglotsystem.model.Vehicle;
-import com.team12.parkinglotsystem.service.ParkingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,16 +14,14 @@ import java.util.Map;
 @RequestMapping("/api/parking")
 public class ParkingController {
 
-    private final ParkingService parkingService;
+    private final ParkingFacade parkingFacade;
 
-    @Autowired
-    public ParkingController(ParkingService parkingService) {
-        this.parkingService = parkingService;
+    // Constructor Injection (clean, no Lombok)
+    public ParkingController(ParkingFacade parkingFacade) {
+        this.parkingFacade = parkingFacade;
     }
 
     // POST /api/parking/entry
-    // Body: { "numberPlate": "KA01AB1234", "ownerName": "John", "vehicleType":
-    // "CAR", "strategy": "nearestSlot" }
     @PostMapping("/entry")
     public ResponseEntity<?> vehicleEntry(@RequestBody Map<String, String> request) {
         try {
@@ -33,8 +30,10 @@ public class ParkingController {
             Vehicle.VehicleType vehicleType = Vehicle.VehicleType.valueOf(request.get("vehicleType").toUpperCase());
             String strategy = request.getOrDefault("strategy", "nearestSlot");
 
-            TicketResponse ticket = parkingService.parkVehicle(numberPlate, ownerName, vehicleType, strategy);
+            TicketResponse ticket = parkingFacade.parkVehicle(numberPlate, ownerName, vehicleType, strategy);
+
             return ResponseEntity.ok(ticket);
+
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
         } catch (Exception e) {
@@ -44,13 +43,15 @@ public class ParkingController {
     }
 
     // POST /api/parking/exit
-    // Body: { "numberPlate": "KA01AB1234" }
     @PostMapping("/exit")
     public ResponseEntity<?> vehicleExit(@RequestBody Map<String, String> request) {
         try {
             String numberPlate = request.get("numberPlate");
-            TicketResponse ticket = parkingService.exitVehicle(numberPlate);
+
+            TicketResponse ticket = parkingFacade.exitVehicle(numberPlate);
+
             return ResponseEntity.ok(ticket);
+
         } catch (IllegalStateException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
         } catch (Exception e) {
@@ -62,23 +63,24 @@ public class ParkingController {
     // GET /api/parking/active
     @GetMapping("/active")
     public ResponseEntity<List<TicketResponse>> getActiveTickets() {
-        return ResponseEntity.ok(parkingService.getActiveTickets());
+        return ResponseEntity.ok(parkingFacade.getActiveTickets());
     }
 
     // GET /api/parking/ticket/{id}
     @GetMapping("/ticket/{id}")
     public ResponseEntity<?> getTicketById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(parkingService.getTicketById(id));
+            return ResponseEntity.ok(parkingFacade.getTicketById(id));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
         }
     }
 
+    // GET /api/parking/search
     @GetMapping("/search")
     public ResponseEntity<?> searchVehicle(@RequestParam String vehicleNumber) {
         try {
-            TicketResponse ticket = parkingService.findActiveTicketByVehicleNumber(vehicleNumber);
+            TicketResponse ticket = parkingFacade.searchVehicle(vehicleNumber);
             return ResponseEntity.ok(ticket);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(StatusResponse.error(e.getMessage()));
